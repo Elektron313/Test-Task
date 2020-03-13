@@ -1,26 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import SelectData from './Component/SelectData/SelectData';
+import Table from './Component/TableContainer/Table';
+import {getData} from './redux/selectData-reducer';
+import {connect} from 'react-redux';
+import Preloader from './Component/Common/Preloader/Preloader';
+import TableContainer from './Component/TableContainer/TableContainer';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+ componentDidMount() {
+     this.props.getData();
+ }
+
+    render() {
+        if (this.props.isFetching) {
+            return <Preloader/>
+        }
+
+        return (
+            <div className="container">
+                <SelectData/>
+                <TableContainer/>
+            </div>
+        );
+    }
 }
+    const mapStateToProps = (state) => ({
+        isFetching: state.data.isFetching,
+    });
 
-export default App;
+    const mapDispatchToProps = ({
+        getData,
+    })
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
